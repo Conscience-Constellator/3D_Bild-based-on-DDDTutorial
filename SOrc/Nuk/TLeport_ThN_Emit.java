@@ -1,0 +1,70 @@
+package Nuk;
+
+import CC.COd.Lin_DclAr;
+
+import CC.Encycloped.Abs.Scal.Gom.ShAp.Inbl;
+import CC.Encycloped.Abs.Scal.Gom.LOc$LOc;
+import CC.Encycloped.Abs.Scal.Physc.Physc_SpAc;
+import CC.Encycloped.Abs.Scal.Gom.Trand_Inbl;
+import CC.Encycloped.Abs.Scal.Physc.SpAc_Object;
+import CC.Encycloped.Abs.Scal.Physc.Tik_Tran;
+import java.util.ArrayList;
+import java.util.List;
+
+public class TLeport_ThN_Emit<Rapd_Inbl_Typ extends Trand_Inbl<Physc_SpAc,?>>
+	 extends			  Nuk<Rapd_Inbl_Typ>
+{
+	public List<Tik_Tran> List=new ArrayList<>();
+	public LOc$LOc LOc_SOrc;
+
+	public static void Rmov_Al_In_From_SpAc(Inbl Bordr,List<Tik_Tran> Objectg,List<Tik_Tran> To)
+	{
+		double[] LOc=new double[3];
+		for(int IndX=0;
+				IndX<Objectg.size();
+				IndX+=1)
+		{
+			Tik_Tran Object=Objectg.get(IndX);
+			SpAc_Object TRget=Object.TRget;
+			TRget.Get_LOc_CoP_As_ArA(LOc);
+			if(Bordr.Is_In(LOc))
+			{
+				TRget.Rmov_From_SpAc();
+				To.add(Object);
+			}
+		}
+	}
+	@Lin_DclAr
+	public void Rmov_Al_In_From_SpAc(List<Tik_Tran> Objectg)
+	{
+		Rmov_Al_In_From_SpAc(Get_Rapd_Inbl(),
+			Objectg,
+			List);
+	}
+	@Lin_DclAr
+	public void Emit()
+	{
+		Physc_SpAc SpAc=Get_SpAc();
+		double[] LOc=new double[3];
+		for(Tik_Tran Object:List)
+		{
+			SpAc_Object TRget=Object.TRget;
+				LOc_SOrc.Aply(TRget,LOc);
+				TRget.Ad_To_SpAc(SpAc);
+		}
+	}
+
+	@Override
+	public void ActivAt()
+	{
+		Rmov_Al_In_From_SpAc(Get_SpAc().Get_Physc_LMNt_Cast("Tran"));
+
+		Emit();
+	}
+
+	public TLeport_ThN_Emit(Rapd_Inbl_Typ Bordr,LOc$LOc LOc_SOrc)
+	{
+		super(Bordr);
+		this.LOc_SOrc=LOc_SOrc;
+	}
+}
